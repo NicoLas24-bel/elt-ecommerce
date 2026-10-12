@@ -12,6 +12,20 @@ env/
 .mypy_cache/
 .ruff_cache/
 .ipynb_checkpoints/
+.coverage
+htmlcov/
+.tox/
+.nox/
+build/
+dist/
+*.egg-info/
+
+# dbt generated artifacts
+target/
+dbt_packages/
+
+# Generated intermediate data
+data/interim/
 
 *.log
 logs/
@@ -25,3 +39,5 @@ data/processed/
 Thumbs.db
 .idea/
 .vscode/
+
+
