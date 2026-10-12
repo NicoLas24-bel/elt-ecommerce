@@ -13,7 +13,7 @@ num_customers = 1000
 num_products = 100
 num_orders = 5000
 
-print("Generando datos de clientes...")
+print("1. Generando datos de clientes...")
 
 # ---- Generar datos de clientes --------
 
@@ -68,7 +68,7 @@ df_orders = pd.DataFrame(orders)
 
 print("2. Conectando a PostgreSQL y creando esquema 'raw'...")
 # Tu conexión local por el puerto 5433
-engine = create_engine('postgresql+psycopg2://dbt_user:123@localhost:5433/ecom_warehouse')
+engine = create_engine('postgresql+psycopg2://dbt_user:dbt_1464@localhost:5433/ecom_warehouse')
 
 # Crear esquema 'raw' si no existe
 # En ELT , cargamos los datos tal cual llegan en un esquema raw, sin transformaciones
