@@ -1,13 +1,13 @@
 version: '3.9'
 
 services:
-# 1. Data Warehouse
+  # 1. Nuestro Data Warehouse
   postgres:
     image: postgres:15
     container_name: elt_postgres
     environment:
       POSTGRES_USER: dbt_user
-      POSTGRES_PASSWORD: 123
+      POSTGRES_PASSWORD: dbt_1464
       POSTGRES_DB: ecom_warehouse
     ports:
       - "5433:5432"
@@ -16,35 +16,36 @@ services:
     networks:
       - elt_network
     healthcheck:
-        test: ["CMD-SHELL", "pg_isready -U dbt_user -d ecom_warehouse"]
-        interval: 10s
-        timeout: 5s
-        retries: 5
+      test: ["CMD-SHELL", "pg_isready -U dbt_user -d ecom_warehouse"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
-# 2. Herramienta de visualización (BI)
-metabase:
-  image: metabase/metabase:latest
-  container_name: elt_metabase
-  ports:
-    - "3000:3000"
-  environment:
-  # Configuramos Metabase para que use la misma base de datos de Postgres para guardar su propia configuración
-    MB_DB_TYPE: postgres
-    MB_DB_DBNAME: ecom_warehouse
-    MB_DB_PORT: 5432
-    MB_DB_USER: dbt_user
-    MB_DB_PASS: 123
-    MB_DB_HOST: postgres # Usa el nombre del servicio para conectarse en la red interna  depends_on:
-    postgres:
-      condition: service_healthy # Metabase espera a que Postgres esté listo
-  networks:
-    - elt_network
+  # 2. Nuestra herramienta de Visualización (BI)
+  metabase:
+    image: metabase/metabase:latest
+    container_name: elt_metabase
+    ports:
+      - "3000:3000"
+    environment:
+      # Configuramos Metabase para que use la misma base de datos de Postgres para guardar su propia configuración
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: ecom_warehouse
+      MB_DB_PORT: 5432
+      MB_DB_USER: dbt_user
+      MB_DB_PASS: dbt_1464
+      MB_DB_HOST: postgres # Usa el nombre del servicio para conectarse en la red interna
+    depends_on:
+      postgres:
+        condition: service_healthy # Metabase espera a que Postgres esté listo
+    networks:
+      - elt_network
 
-# Definimos la red para que los servicios puedan comunicarse entre sí
-networks: 
+# Definimos una red interna para que los contenedores se comuniquen
+networks:
   elt_network:
     driver: bridge
 
-# Definimos un volumen para persistir los datos de Postgres
+# Definimos un volumen persistente para no perder los datos al apagar Postgres
 volumes:
   postgres_data:
